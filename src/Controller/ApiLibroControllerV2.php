@@ -137,10 +137,13 @@ final class ApiLibroControllerV2 extends AbstractController
         //     return $this->json($error, Response::HTTP_BAD_REQUEST);
         // }
 
-        // $error = $this->formatResponseOnInvalidFields($data, "descripcion", 'Invalid JSON');
-        // if ($error) {
-        //     return $this->json($error, Response::HTTP_BAD_REQUEST);
-        // }
+        //Debemos asegurarnos de que descripcio viene sí o sí en el PUT, 
+        // aunque su valor sea null, para evitar que se envíe un JSON sin ese campo 
+        // y se pierda la información de la descripción al actualizar el libro
+        $error = $this->formatResponseOnInvalidFields($data, "descripcion", 'Invalid JSON');
+        if ($error) {
+            return $this->json($error, Response::HTTP_BAD_REQUEST);
+        }
 
 
         //Aplicamos trim() a los campos string para evitar que se envíen valores con espacios en blanco al inicio o al final
@@ -236,14 +239,14 @@ final class ApiLibroControllerV2 extends AbstractController
         return [];
     }
 
-    // private function formatResponseOnInvalidFields(array $data, string $fieldName, string $message)
-    // {
-    //     //Para permitir que un campo exista y su valor sea null, en lugar de  !isset($data[$fieldName])  se puede usar array_key_exists para validar solo la existencia de la clave en el array, sin importar su valor (null, vacío, etc.)
-    //     //if (!isset($data[$fieldName])) {
-    //     if (!array_key_exists($fieldName, $data)) {
-    //         return ["error" => $message];
-    //     }
-    // }
+    private function formatResponseOnInvalidFields(array $data, string $fieldName, string $message)
+    {
+        //Para permitir que un campo exista y su valor sea null, en lugar de  !isset($data[$fieldName])  se puede usar array_key_exists para validar solo la existencia de la clave en el array, sin importar su valor (null, vacío, etc.)
+        //if (!isset($data[$fieldName])) {
+        if (!array_key_exists($fieldName, $data)) {
+            return ["error" => $message];
+        }
+    }
 
     private function trimOrNull(mixed $value): ?string
     {
