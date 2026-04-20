@@ -89,7 +89,7 @@ final class ApiLibroControllerV2 extends AbstractController
 
 
         $libro = new Libro();
-        //Vamos a forzar que en el POST vengan todos los atributos (salvo el id)
+        //Vamos a forzar que en el POST venga mínimo título, descripción podría no venir
 
         $libro->setTitulo($this->trimOrNull($data['titulo'] ?? null));
         $libro->setDescripcion($this->trimOrNull($data['descripcion'] ?? null));
